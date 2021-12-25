@@ -8,9 +8,9 @@ on:
   schedule:
     - cron: 0 22 * * *
 
-点赞☆Star触发编译
-watch:
-  types: [started]
+# 点赞☆Star触发编译
+#  watch:
+#    types: [started]
 
 jobs:
   Build_k3:
