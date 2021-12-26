@@ -4,13 +4,12 @@ on:
   repository_dispatch:
   workflow_dispatch:
 
- on:
+on:
   schedule:
     - cron: 0 22 * * *
 
-# 点赞☆Star触发编译
-#  watch:
-#    types: [started]
+  watch:
+      types: [started]
 
 jobs:
   Build_k3:
