@@ -7,9 +7,9 @@ on:
 on:
   schedule:
     - cron: 0 22 * * *
-
-  star:
-      types: [started]
+  push:
+    branches:
+      - master
 
 jobs:
   Build_k3:
