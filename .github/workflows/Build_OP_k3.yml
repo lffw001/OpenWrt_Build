@@ -40,7 +40,7 @@ jobs:
         
     - name: Clone source code
       env: 
-        REPO_URL: https://github.com/lffw001/lede
+        REPO_URL: https://github.com/xiangfeidexiaohuo/lede
         REPO_BRANCH: K3
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
