@@ -46,7 +46,7 @@ sed -i 's/luci-theme-bootstrap/luci-theme-argon-18.06/g' feeds/luci/collections/
 
 
 ##加入作者信息
-sed -i "s/DISTRIB_REVISION='*.*'/DISTRIB_REVISION='By YaoDao $(date +%Y%m%d)'/g" package/lean/default-settings/files/zzz-default-settings
+sed -i "s/DISTRIB_REVISION='*.*'/DISTRIB_REVISION='By longfeifengwu $(date +%Y%m%d)'/g" package/lean/default-settings/files/zzz-default-settings
 
 
 
