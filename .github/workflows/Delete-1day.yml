@@ -1,15 +1,15 @@
-name: Delete-Old-Workflows
+name: Delete-1day
 
 on: 
   repository_dispatch:
   workflow_dispatch:
 
 # 定时触发编译
-  schedule:
-    - cron: 0 0 * * 0
+#  schedule:
+#   - cron: 0 0 * * 0
 
 jobs:
-  Delete-Old-Workflows:
+  Delete-1day:
     runs-on: ubuntu-20.04
     steps:
     - name: Clone Repository
@@ -25,5 +25,5 @@ jobs:
       uses: xiangfeidexiaohuo/delete-workflow-runs@main
       continue-on-error: true
       with:
-        retain_days: 3
+        retain_days: 1
         keep_minimum_runs: 0

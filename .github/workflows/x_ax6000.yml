@@ -1,19 +1,11 @@
-name: Build_k3
+name: x_ax6000
 
 on: 
   repository_dispatch:
   workflow_dispatch:
 
-# 定时触发编译
-  schedule:
-    - cron: 10 22 * * 4
-
-# 点赞☆Star触发编译
-#  watch:
-#    types: [started]
-
 jobs:
-  Build_k3:
+  x_ax6000:
     runs-on: ubuntu-20.04
     steps:
     - name: Clone Repository
@@ -56,21 +48,15 @@ jobs:
 
         ./scripts/feeds install -a
 
-        cp -f ../diy/lean/lean2.sh ./        
-        chmod +x ./lean2.sh && ./lean2.sh
-        
+        cp -f ../diy/lean/lean3.sh ./        
+        chmod +x ./lean3.sh && ./lean3.sh
+
         cp -f ../diy/lean/hostapd.sh ./        
-        chmod +x ./hostapd.sh && ./hostapd.sh
-            
-        sed -i 's/+!TARGET_ramips:kmod-usb-storage-uas //g'  ./package/lean/automount/Makefile
-        sed -i "s/KERNEL_PATCHVER:=*.*/KERNEL_PATCHVER:=5.4/g" target/linux/bcm53xx/Makefile
-        sed -i 's/\${Arch}/armv5/g' feeds/extraipk/luci-app-adguardhome/root/usr/share/AdGuardHome/links.txt
-        sed -i "s/DISTRIB_DESCRIPTION='*.*'/DISTRIB_DESCRIPTION='AE86Wrt-K3-$(date +%Y%m%d)'/g" package/lean/default-settings/files/zzz-default-settings  
-       
+        chmod +x ./hostapd.sh && ./hostapd.sh      
               
-    - name: Configuration Customization - Build_k3
+    - name: Configuration Customization - Custom_ax6000
       env:
-        CONFIG_FILE: './configs/ARM/other/k3.config'
+        CONFIG_FILE: './configs/ARM/x/lean_ax6000.config'
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         cd openwrt && make defconfig
@@ -84,7 +70,7 @@ jobs:
 
     - name: Build firmware
       working-directory: ./openwrt
-      run: |
+      run: |      
         make -j$(nproc) V=s
         
     - name: Assemble Artifact
@@ -100,50 +86,33 @@ jobs:
         md5=`echo ${md5:0:10}`
         }
         
-        rom=openwrt/bin/targets/bcm53xx/generic/openwrt-bcm53xx-generic-phicomm_k3-squashfs.trx
-        getmd5 $rom
-                
-        cp -a $rom ./ARM_Out/AE86Wrt-K3-5.4-$(date +%Y%m%d)_${md5}.trx
+        rom=openwrt/bin/targets/mediatek/filogic/openwrt-mediatek-filogic-xiaomi_redmi-router-ax6000-squashfs-sysupgrade.bin
+        getmd5 $rom        
+        cp -a $rom ./ARM_Out/Routes.Live-R2023_Redmi-AX6000-$(date +%Y%m%d)_${md5}.bin
                
     - name: Upload Firmwares
       uses: actions/upload-artifact@main
       with:
-        name: K3-OpenWrt_504
-        path: ARM_Out/*.trx   
+        name: AX6000-OpenWrt
+        path: ARM_Out/*.bin
 
     - name: Upload config
       uses: actions/upload-artifact@main
       with:
-        name: k3-config
-        path: openwrt/.config  
- 
+        name: ax6000-config
+        path: openwrt/.config
+
     - name: Upload Packages
       uses: actions/upload-artifact@main
       with:
-        name: K3-Packages
-        path: openwrt/bin/packages 
-        
-    - name: Generate Tag & Release Name
-      id: generate_name
-      run: |
-        time=$(date +%Y%m%d%H%M%S)
-        release_tag="$time"
-        release_name="斐讯K3-OpenWrt-5.4内核-$(date +%Y%m%d)"
-        echo "release_name=$release_name" >> $GITHUB_OUTPUT
-        echo "release_tag=$release_tag" >> $GITHUB_OUTPUT       
+        name: AX6000-515-Packages
+        path: openwrt/bin/packages
 
-    - name: Create Release & Upload
-      uses: ncipollo/release-action@v1
-      with:
-        artifacts: ARM_Out/*.trx
-        name: ${{ steps.generate_name.outputs.release_name }}
-        tag: ${{ steps.generate_name.outputs.release_tag }}
-        token: ${{ secrets.GITHUB_TOKEN }}
-        
+
     - name: Upload Aliyun
-      run: | 
+      run: |  
         cd ARM_Out
         echo "请自动忽略META-INF文件夹。" > 忽略META-INF文件夹.txt
-        jar cf K3-5.4-$(date +%Y%m%d).zip *
-        cd ..       
-        python diy/aliupload.py --token "${{ secrets.ALIYUN_TOKEN }}" --uploadFloder "OpenWrt/K3/5.4" --file "ARM_Out/K3-5.4-$(date +%Y%m%d).zip"                        
+        jar cf AX6000-5.15-$(date +%Y%m%d).zip *
+        cd ..    
+        python diy/aliupload.py --token "${{ secrets.ALIYUN_TOKEN }}" --uploadFloder "OpenWrt/Custom" --file "ARM_Out/AX6000-5.15-$(date +%Y%m%d).zip"                               
